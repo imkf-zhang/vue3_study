@@ -3,10 +3,6 @@
       <h1>年龄</h1>
       <div>今年：{{age}}</div>
       <div>后年：{{newAge}}</div>
-      <hr />
-      <h1>体重</h1>
-      <div>前：{{yearOld}}</div>
-      <div>后：{{yearNew}}</div>
   </div>
 </template>
 <script>
@@ -21,16 +17,7 @@ export default {
         return age.value + 2
     })
 
-    let yearOld = ref(148)
-    const yearNew = computed({
-        get() {
-            return yearOld.value - 8
-        },
-        set(value) {
-            yearOld.value = value + 8
-        }
-    })
-    return { age, newAge, yearOld, yearNew};
+    return { age, newAge};
   },
 };
 </script>

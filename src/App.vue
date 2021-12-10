@@ -1,39 +1,79 @@
 <template>
-  <div class="container">
-    <div>今年：{{age}}岁</div>
-    <div>后年：{{newAge}}岁</div>
-    <!-- 使用v-model绑定计算属性 -->
-    <input type="text" v-model="newAge">
+  <div id="container">
+      <div>
+          <p>count的值：{{count}}</p>
+          <button @click="add">+1按钮</button>
+      </div>
+      <hr>
+      <div>
+          <p>{{obj.name}}</p>
+          <p>{{obj.age}}</p>
+          <p>{{obj.brand.name}}</p>
+          <button @click="updateName">改名字</button>
+          <button @click="updateBrandName">改车的名字</button>
+      </div>
   </div>
 </template>
 <script>
-import { computed, ref } from 'vue'
+import { ref,watch,reactive } from 'vue'
 export default {
-  name: 'App',
-  setup () {
-    // 1. 计算属性：当你需要依赖现有的响应式数据，根据一定逻辑得到一个新的数据。
-    const age = ref(16)
-    // 得到后年的年龄
-    // const newAge = computed(()=>{
-    //   // 该函数的返回值就是计算属性的值
-    //   return age.value + 2
-    // })
+  name: "",
+  setup() {
+    const count = ref(0);
+    const add = () => {
+        count.value++
+    }
 
-    // 计算属性高级用法，传人对象
-    const newAge = computed({
-      // get函数，获取计算属性的值
-      get(){
-        return age.value + 2
-      },
-      // set函数，当你给计算属性设置值的时候触发
-      set (value) {
-        console.log(value) //value是计算属性改变后的值
-        age.value = value - 2
-      }
+    const obj = reactive({
+        name: 'ls',
+        age: 10,
+        brand: {
+            id: 4,
+            name: '宝马'
+        }
+    })
+    const updateName = () => {
+        obj.name = 'zs'
+    }
+    const updateBrandName = () => {
+        obj.brand.name = "奔驰"
+    }
+    // 当需要监听数据变化  使用watch
+    
+    // 1、监听一个ref数据
+    // 1.1、第一个参数 需要监听的目标
+    // 1.2、第二个参数 改变后触发的函数
+    watch(count, (newVal,oldVal) => {
+        console.log(newVal,oldVal)
     })
 
+    // 2、监听一个reactive数据
+     watch(obj, (newVal,oldVal) => {
+        console.log(newVal.name,oldVal.name)
+    })
 
-    return {age, newAge}
-  }
-}
+    // 3、监听多个数据的变化
+    watch([count,obj],() => {
+        console.log('监听了多个数据改变')
+    })
+
+    // 4、只想监听对象中的一个属性的变化 例如： obj.name
+    // 写成函数的形式，比较像计算属性 是个函数返回值
+    watch(()=>obj.name, ()=>{
+        console.log("监听到obj.name变化了")
+    })
+
+    watch(()=>obj.brand, ()=> {
+        console.log('车的品牌换了')
+    },{
+        // 深度监听
+        // deep: true,
+        // 想要默认触发
+        // immediate: true
+    })
+    return { count, add, obj,updateName,updateBrandName };
+  },
+};
 </script>
+<style lang='less' scoped>
+</style>
