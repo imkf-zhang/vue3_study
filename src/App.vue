@@ -1,77 +1,49 @@
 <template>
   <div id="container">
-      <div>
-          <p>count的值：{{count}}</p>
-          <button @click="add">+1按钮</button>
-      </div>
-      <hr>
-      <div>
-          <p>{{obj.name}}</p>
-          <p>{{obj.age}}</p>
-          <p>{{obj.brand.name}}</p>
-          <button @click="updateName">改名字</button>
-          <button @click="updateBrandName">改车的名字</button>
-      </div>
+    <!-- vue2.0 获取单个元素 -->
+    <!-- 1. 通过ref属性绑定该元素 -->
+    <!-- 2. 通过this.$refs.box获取元素 -->
+    <!-- <div ref="box">我是box</div> -->
+    <!-- vue2.0 获取v-for遍历的多个元素 -->
+    <!-- 1. 通过ref属性绑定被遍历元素 -->
+    <!-- 2. 通过this.$refs.li 是个数组 获取所有遍历元素  -->
+    <!-- <ul>
+      <li v-for="i in 4" :key="i" ref="li">{{i}}</li>
+    </ul> -->
+
+    <!-- 单个元素的情况 -->
+    <div ref="dom">我是box</div>
+
+    <!-- 被遍历元素的情况 -->
+    <ul>
+        <li v-for=" i in 4" :key="i" :ref="setDom">{{i}}</li>
+    </ul>
   </div>
 </template>
 <script>
-import { ref,watch,reactive } from 'vue'
+import { ref, onMounted } from 'vue';
 export default {
   name: "",
   setup() {
-    const count = ref(0);
-    const add = () => {
-        count.value++
+    // 1. 获取单个元素
+    // 1.1 先定义一个空的响应式数据ref定义的
+    // 1.2 setup中返回该数据，你想获取那个dom元素，在该元素上使用ref属性绑定该数据即可。
+    const dom = ref(null)
+    onMounted(() => {
+        console.log(dom)
+    })
+    // 2. 获取v-for遍历的元素
+    // 2.1 定义一个空数组，接收所有的LI
+    // 2.2 定义一个函数，往空数组push DOM
+    // 2.3 在循环的dom上，或者组件上使用:ref绑定这个函数
+    let domList = []
+    const setDom = (el) => {
+        domList.push(el)
     }
-
-    const obj = reactive({
-        name: 'ls',
-        age: 10,
-        brand: {
-            id: 4,
-            name: '宝马'
-        }
+    onMounted( () => {
+        console.log(domList)
     })
-    const updateName = () => {
-        obj.name = 'zs'
-    }
-    const updateBrandName = () => {
-        obj.brand.name = "奔驰"
-    }
-    // 当需要监听数据变化  使用watch
-    
-    // 1、监听一个ref数据
-    // 1.1、第一个参数 需要监听的目标
-    // 1.2、第二个参数 改变后触发的函数
-    watch(count, (newVal,oldVal) => {
-        console.log(newVal,oldVal)
-    })
-
-    // 2、监听一个reactive数据
-     watch(obj, (newVal,oldVal) => {
-        console.log(newVal.name,oldVal.name)
-    })
-
-    // 3、监听多个数据的变化
-    watch([count,obj],() => {
-        console.log('监听了多个数据改变')
-    })
-
-    // 4、只想监听对象中的一个属性的变化 例如： obj.name
-    // 写成函数的形式，比较像计算属性 是个函数返回值
-    watch(()=>obj.name, ()=>{
-        console.log("监听到obj.name变化了")
-    })
-
-    watch(()=>obj.brand, ()=> {
-        console.log('车的品牌换了')
-    },{
-        // 深度监听
-        // deep: true,
-        // 想要默认触发
-        // immediate: true
-    })
-    return { count, add, obj,updateName,updateBrandName };
+    return { dom, setDom };
   },
 };
 </script>
