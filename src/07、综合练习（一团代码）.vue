@@ -11,8 +11,10 @@
 </template>
 <script>
 import { reactive, onMounted, toRef, toRefs,ref, onUnmounted } from "vue";
-const handleMove = () => {
-     const mouse = reactive({
+export default {
+  name: "App",
+  setup() {
+    const mouse = reactive({
       x: 0,
       y: 0,
     });
@@ -33,12 +35,9 @@ const handleMove = () => {
     onUnmounted(() => {
         document.removeEventListener('mousemove',move)
     })
-    return mouse
-}
-export default {
-  name: "App",
-  setup() {
-    const mouse = handleMove();
+    //   return { ...mouse} 这种用法是错的 reactive定义的响应式对象
+    // 一旦展开就不是响应式的了
+
     let count = ref(0);
     const handleAdd = () => {
         count.value += 1
