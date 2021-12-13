@@ -1,5 +1,7 @@
 <template>
   <div id="container">
+      <div>{{count}}</div>
+      <button @click="add">+1</button>
     <!-- vue2.0 获取单个元素 -->
     <!-- 1. 通过ref属性绑定该元素 -->
     <!-- 2. 通过this.$refs.box获取元素 -->
@@ -21,7 +23,7 @@
   </div>
 </template>
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,onBeforeUpdate} from 'vue';
 export default {
   name: "",
   setup() {
@@ -43,7 +45,15 @@ export default {
     onMounted( () => {
         console.log(domList)
     })
-    return { dom, setDom };
+    onBeforeUpdate( ()=> {
+        console.log("组件更新了")
+        domList = []
+    })
+    let count = ref(0)
+    let add = () => {
+        count.value++
+    }
+    return { dom, setDom, count,add };
   },
 };
 </script>
