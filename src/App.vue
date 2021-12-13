@@ -1,25 +1,30 @@
 <template>
   <div id="container">
-    <h1>父组件</h1>
-    <div>{{ money }}</div>
-    <hr />
-    <son-two :mon="money" @change-money="unpdataMoney"></son-two>
+      <h1>父组件 {{money}}</h1>
+      <button @click="money = 1000">发钱</button>
+      <hr>
+      <Sonn />
   </div>
 </template>
 <script>
-import { ref } from "vue";
-import SonTwo from "./SonTwo.vue";
+import Sonn from './Soon.vue'
+import { provide,ref } from 'vue'
 export default {
   name: "App",
   components: {
-    SonTwo,
+     Sonn  
   },
   setup() {
-    const money = ref(101);
-    const unpdataMoney = (newMoney) => {
-      money.value = money.value- newMoney;
-    };
-    return { money, unpdataMoney };
+    const money = ref(100);
+    const changeMoney = (saleMoney) => {
+        console.log('changeMoney',saleMoney)
+        money.value = money.value - saleMoney
+    }
+    // 将数据提供给后代组件 provide
+    provide('money',money)
+    // 将函数提供给后代组件 provide
+    provide('changeMoney',changeMoney)
+    return { money };
   },
 };
 </script>
