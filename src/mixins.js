@@ -1,5 +1,5 @@
 // 配置对象
-export const followMixin =  {
+const followMixin =  {
     data () {
       return {
         loading: false
@@ -15,4 +15,7 @@ export const followMixin =  {
         },2000)
       }
     }
+  }
+  export {
+    followMixin
   }
